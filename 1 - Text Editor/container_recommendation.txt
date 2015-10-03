@@ -1,0 +1,8 @@
+Based on the observed times of each operation, for each underlying container type, the operations
+performed when the document is backed by std::list had the best overall performance.
+
+std::vector had pretty comparable time, but it was much slower with respect to erasing/substitution.
+std::deque had fast copy operations, but every other operation was much slower
+std::forward_list wasn't much better in terms of any one operation, but it was on par with the erase operation as
+	the fastest containers.
+Therefore, the std::list container is the "best" suited for the job.

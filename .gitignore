@@ -26,3 +26,25 @@
 *.exe
 *.out
 *.app
+/Homework 2.pdf
+/Session 2 Possible Solution.zip
+/Header Files.zip
+/2 - Trouble Tickets/TroubleTickets.opensdf
+/2 - Trouble Tickets/TroubleTickets.sdf
+/2 - Trouble Tickets/.vs
+/2 - Trouble Tickets/Debug
+/2 - Trouble Tickets/project_g++.exe
+vc140.idb
+vc140.pdb
+TroubleTickets.tlog
+main.obj
+TroubleTicket.obj
+TroubleTickets.exe
+TroubleTickets.ilk
+TroubleTickets.log
+TroubleTickets.pdb
+.vs
+Debug
+Library
+/1 - Text Editor/project_g++.exe
+/1 - Text Editor/TextEditor.sdf

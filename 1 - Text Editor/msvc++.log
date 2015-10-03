@@ -1,0 +1,68 @@
+Testing Document with class Library::Document<class std::vector,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >
+------------------------------------------------
+
+Timer: Elapsed Time of ::snap() 	= 0.269994 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.792132 (seconds)
+
+Timer: Elapsed Time of ::undo(1) 	= 2.408e-06 (seconds)
+
+Timer: Elapsed Time of ::copy_range() 	= 0.0200893 (seconds)
+
+Timer: Elapsed Time of ::paste_after() 	= 0.0671698 (seconds)
+
+Timer: Elapsed Time of ::substitute() 	= 0.920421 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.0342107 (seconds)
+
+Testing Document with class Library::Document<class std::list,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >
+------------------------------------------------
+
+Timer: Elapsed Time of ::snap() 	= 0.299563 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.0708004 (seconds)
+
+Timer: Elapsed Time of ::undo(1) 	= 2.408e-06 (seconds)
+
+Timer: Elapsed Time of ::copy_range() 	= 0.0496764 (seconds)
+
+Timer: Elapsed Time of ::paste_after() 	= 0.0249807 (seconds)
+
+Timer: Elapsed Time of ::substitute() 	= 0.0776053 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.0483285 (seconds)
+
+Testing Document with class Library::Document<class std::deque,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >
+------------------------------------------------
+
+Timer: Elapsed Time of ::snap() 	= 0.281109 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.751569 (seconds)
+
+Timer: Elapsed Time of ::undo(1) 	= 2.709e-06 (seconds)
+
+Timer: Elapsed Time of ::copy_range() 	= 0.0244347 (seconds)
+
+Timer: Elapsed Time of ::paste_after() 	= 0.124118 (seconds)
+
+Timer: Elapsed Time of ::substitute() 	= 1.03261 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.0405448 (seconds)
+
+Testing Document with class Library::Document<class std::forward_list,class std::basic_string<char,struct std::char_traits<char>,class std::allocator<char> > >
+------------------------------------------------
+
+Timer: Elapsed Time of ::snap() 	= 0.301046 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.22126 (seconds)
+
+Timer: Elapsed Time of ::undo(1) 	= 4.815e-06 (seconds)
+
+Timer: Elapsed Time of ::copy_range() 	= 0.0554877 (seconds)
+
+Timer: Elapsed Time of ::paste_after() 	= 0.0424745 (seconds)
+
+Timer: Elapsed Time of ::substitute() 	= 0.23228 (seconds)
+
+Timer: Elapsed Time of ::erase() 	= 0.0392099 (seconds)
+
