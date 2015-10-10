@@ -31,6 +31,9 @@
 #include <stack>
 #include <string>
 #include <vector>
+#include <map>
+#include <set>
+#include <functional>
 
 namespace Library
 {
@@ -99,9 +102,11 @@ namespace Library
       // Replace all occurrences of a phrase with another phrase
       void substitute   (const ValueType & oldPhrase, const ValueType & newPhrase);
 
-
+      void showStats    (std::ostream & os);
 
     private:
+      using StatContainerType = std::map<ValueType, typename ContainerType::size_type>;  
+      
       ContainerType               _document;
       std::stack<ContainerType>   _snapshots;      // Undo buffer allowing multiple levels of undo
       ContainerType               _copy_buffer;    // Copy buffer holding a copy of some portion of the document

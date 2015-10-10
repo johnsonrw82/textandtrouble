@@ -21,6 +21,10 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <regex>
+#include <iomanip>
+
+#include "Library/Document.hpp"
 
 namespace Library {
 	// borrowed this mechanism of using nameless namespaces from the HW2 sample solution
@@ -146,9 +150,9 @@ namespace Library {
 	// operator = overload for rvalue reference
 	template < template<class, class> class T1, class T2 >
 	Document<T1, T2> & Document<T1, T2>::operator=(Document &&  rhs) {
-		std::swap(rhs._copy_buffer, this->_copy_buffer);
-		std::swap(rhs._document, this->_document);
-		std::swap(rhs._snapshots, this->_snapshots);		
+		this->_copy_buffer = std::move(rhs._copy_buffer);
+		this->_document = std::move(rhs._document);
+		this->_snapshots = std::move(rhs._snapshots);		
 
 		return *this;
 	}
@@ -292,6 +296,90 @@ namespace Library {
 		}
 
 	}
+        
+        template < template<class, class> class T1, class T2 >
+	void Document<T1, T2>::showStats(std::ostream & os) {
+                // statistics container
+                StatContainerType           _statistics;
+                typename ContainerType::size_type maxOcc = 0;
+                
+                // define regular expression to match one or more alphanumeric characters
+                std::regex wordRegex("[0-9a-zA-Z]+");
+                // read through each word and gather the statistics
+                for ( const auto word : _document ) {
+                        std::string tmp(word);  // make a copy of the word to use in the loop
+
+                        // match results
+                        std::smatch results;
+                        // split the word on non alphanumeric characters
+                        while ( std::regex_search(tmp, results, wordRegex ) ) {
+                                // loop through all the matches
+                                for ( auto match : results ) {
+                                        // dont want to modify the contents of the word
+                                        std::string lower(match);
+                                        // transform to lowercase
+                                        std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+                                        
+                                        // increment the number of occurrences and store in the map
+                                        ++_statistics[lower];
+                                        
+                                        if (_statistics[lower] > maxOcc) {
+                                                maxOcc = _statistics[lower];
+                                        }
+                                }
+                                
+                                // use the rest of the string in subsequent matching
+                                tmp = results.suffix().str();
+                        }
+                }
+                
+                // lambda compare function, used for ordering the set
+                auto compareTo = [](const auto * lhs, const auto * rhs) {
+                        // order by count first
+                        if ( lhs->second != rhs->second ) {
+                                return lhs->second > rhs->second;
+                        }
+                        // then by word
+                        return lhs->first < rhs->first;
+                };
+                
+                // create the chart object
+                std::set<typename StatContainerType::value_type *, decltype(compareTo)> chart(compareTo);
+                
+                // make pair set from the map
+                for ( auto & pair : _statistics ) {
+                        chart.insert(&pair);
+                }
+                
+                // save the flags of the stream
+                auto fmtFlags = os.flags();
+                
+                // format the chart, but need to establish some sizing
+                const unsigned int keySize = 20;
+                const unsigned int countSize = 5;
+                const unsigned int histSize = 80; // standard length of most terminals
+                
+                // compute the scaled size based on max occurrences
+                typename ContainerType::size_type scaleValue = maxOcc / histSize + 1;
+                
+                // display the chart header
+                os << std::setw(keySize) << std::right << "Word " << " | " <<
+                        std::setw(countSize) << std::right << "Count" <<
+                        std::left << "   (* is rounded to nearest " << scaleValue << " occurrences)\n" <<
+                        std::string(keySize + countSize + histSize + 5, '-') << '\n';
+                
+                // chart is now sorted, let's display the info
+                for ( const auto & pair : chart ) {
+                        os << std::setw(keySize) << std::right << pair->first.substr(0, keySize) <<
+                                (pair->first.size() > keySize ? "* |" : " | ") <<
+                                std::setw(countSize) << std::right << pair->second <<
+                                "   " << std::left << std::string((pair->second + scaleValue/2) / scaleValue, '*') << '\n';
+                                
+                }
+                
+                // restore
+                os.setf(fmtFlags);
+        }
 }
 
 #endif
