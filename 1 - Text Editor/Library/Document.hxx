@@ -297,10 +297,11 @@ namespace Library {
 
 	}
         
+        // show statistics for this document, printed to supplied ostream
         template < template<class, class> class T1, class T2 >
 	void Document<T1, T2>::showStats(std::ostream & os) {
                 // statistics container
-                StatContainerType           _statistics;
+                StatContainerType statistics;
                 typename ContainerType::size_type maxOcc = 0;
                 
                 // define regular expression to match one or more alphanumeric characters
@@ -321,10 +322,10 @@ namespace Library {
                                         std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
                                         
                                         // increment the number of occurrences and store in the map
-                                        ++_statistics[lower];
+                                        ++statistics[lower];
                                         
-                                        if (_statistics[lower] > maxOcc) {
-                                                maxOcc = _statistics[lower];
+                                        if (statistics[lower] > maxOcc) {
+                                                maxOcc = statistics[lower];
                                         }
                                 }
                                 
@@ -344,25 +345,27 @@ namespace Library {
                 };
                 
                 // create the chart object
+                // use a set, storing pointers to pairs (determined by the stat container type)
                 std::set<typename StatContainerType::value_type *, decltype(compareTo)> chart(compareTo);
                 
-                // make pair set from the map
-                for ( auto & pair : _statistics ) {
+                // insert pair pointers into the set, from the stat map
+                for ( auto & pair : statistics ) {
                         chart.insert(&pair);
                 }
                 
                 // save the flags of the stream
                 auto fmtFlags = os.flags();
                 
-                // format the chart, but need to establish some sizing
+                // format the chart, but need to establish some column sizing
                 const unsigned int keySize = 20;
                 const unsigned int countSize = 5;
-                const unsigned int histSize = 80; // standard length of most terminals
+                const unsigned int histSize = 90;
                 
-                // compute the scaled size based on max occurrences
+                // compute the scaled size based on max occurrences (ensure at least 1)
                 typename ContainerType::size_type scaleValue = maxOcc / histSize + 1;
                 
                 // display the chart header
+                // use setw to set the width, right/left to set alignment
                 os << std::setw(keySize) << std::right << "Word " << " | " <<
                         std::setw(countSize) << std::right << "Count" <<
                         std::left << "   (* is rounded to nearest " << scaleValue << " occurrences)\n" <<
@@ -371,7 +374,7 @@ namespace Library {
                 // chart is now sorted, let's display the info
                 for ( const auto & pair : chart ) {
                         os << std::setw(keySize) << std::right << pair->first.substr(0, keySize) <<
-                                (pair->first.size() > keySize ? "* |" : " | ") <<
+                                (pair->first.size() > keySize ? "* |" : " | ") << // let user know word was truncated, if so
                                 std::setw(countSize) << std::right << pair->second <<
                                 "   " << std::left << std::string((pair->second + scaleValue/2) / scaleValue, '*') << '\n';
                                 

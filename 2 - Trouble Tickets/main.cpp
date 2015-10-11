@@ -11,6 +11,10 @@
 #include <stack>
 #include <string>
 #include <typeinfo>
+#include <set>
+#include <functional>
+#include <iterator>
+#include <iostream>
 
 // anonymous namespace
 namespace {
@@ -156,14 +160,70 @@ namespace {
 
 		std::cout << "Done!\n\n";
 	}
+        
+        // template function, in case we'd ever want to use a different comparison function
+        template <typename C = std::less<TroubleTicket>>
+        std::multiset<TroubleTicket> getTicketSet() {
+                using Priority = TroubleTicket::Priority;
+                using Status = TroubleTicket::Status;
+                
+                // use initializer block to create the list
+                std::multiset<TroubleTicket, C> result = 
+                {
+                        // 20 "random" tickets
+                        {"Change the font on the front page, it's horrid.", Priority::HIGH, Status::HOLD},
+                        {"Put out the fire on the back porch", Priority::CRITICAL},
+                        {"Add an email button to the main landing page", Priority::NORMAL, Status::OPEN},
+                        {"Don't bring fish to work for lunch anymore.", Priority::CRITICAL, Status::IN_WORK},
+                        {"Support the IE browser", Priority::LOW},
+                        {"Take out the trash", Priority::NONE},
+                        {"Fix the bug with the network traffic bottlenecks", Priority::CRITICAL, Status::RESOLVED},
+                        {"Users can't pay", Priority::CRITICAL, Status::OPEN},
+                        {"Users can't get refunds", Priority::LOW, Status::REJECTED},
+                        {"User can't register new username on Fridays", Priority::CRITICAL},
+                        {"Add a knowledge base forum system", Priority::HIGH},
+                        {"Support pages in French", Priority::NORMAL, Status::CLOSED},
+                        {"Make an effort, would ya?", Priority::NONE},
+                        {"Stay off the radar", Priority::CRITICAL},
+                        {"Keep the database from crashing once a month", Priority::HIGH, Status::HOLD},
+                        {"Add a 'Cart' hotkey", Priority::LOW},
+                        {"Set up that meeting we keep talking about", Priority::NONE},
+                        {"Support PayPal", Priority::CRITICAL, Status::VERIFIED},
+                        {"Move your desk down to Storage B", Priority::NONE},
+                        {"Make those millions!", Priority::CRITICAL},
+                };
+                
+                // return
+                return result;
+        }
 }
 
 // main function
 int main() {
+        using Priority = TroubleTicket::Priority;
+        
 	// simulate sessions
-	simulateSession<std::queue<TroubleTicket>>();
-	simulateSession<std::priority_queue<TroubleTicket>>();
-	simulateSession<std::stack<TroubleTicket>>();
+	//simulateSession<std::queue<TroubleTicket>>();
+	//simulateSession<std::priority_queue<TroubleTicket>>();
+	//simulateSession<std::stack<TroubleTicket>>();
 
+        // get a set of tickets
+        std::multiset<TroubleTicket> tickets = getTicketSet();
+        
+        // print High and Critical Priority Tickets
+        std::cout << "Tickets sorted in ascending order:\n";
+        std::copy(tickets.lower_bound({"",Priority::HIGH}),
+                tickets.upper_bound({"", Priority::CRITICAL}),
+                std::ostream_iterator<TroubleTicket>(std::cout, "================================\n"));
+        
+        // need to sort in descending order
+        std::multiset<TroubleTicket, std::greater<TroubleTicket>> ticketSetCopy(tickets.begin(), tickets.end());
+        
+        // print High and Critical Priority Tickets
+        std::cout << "\nTickets sorted in descending order:\n";
+        std::copy(ticketSetCopy.lower_bound({"",Priority::CRITICAL}),
+                ticketSetCopy.upper_bound({"", Priority::HIGH}),
+                std::ostream_iterator<TroubleTicket>(std::cout, "================================\n"));
+        
 	return 0;
 }

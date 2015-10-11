@@ -34,6 +34,7 @@
 #include <map>
 #include <set>
 #include <functional>
+#include <unordered_map>
 
 namespace Library
 {
@@ -102,10 +103,13 @@ namespace Library
       // Replace all occurrences of a phrase with another phrase
       void substitute   (const ValueType & oldPhrase, const ValueType & newPhrase);
 
+      // show statistics for this document, print to supplied ostream
       void showStats    (std::ostream & os);
 
     private:
-      using StatContainerType = std::map<ValueType, typename ContainerType::size_type>;  
+      // specified container type for the statistics
+      //using StatContainerType = std::map<ValueType, typename ContainerType::size_type>;  
+      using StatContainerType = std::unordered_map<ValueType, typename ContainerType::size_type>;
       
       ContainerType               _document;
       std::stack<ContainerType>   _snapshots;      // Undo buffer allowing multiple levels of undo

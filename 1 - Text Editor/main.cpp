@@ -64,7 +64,9 @@ int main() {
 	//testDocument(Document<std::deque>(), std::cin);
 	//testDocument(Document<std::forward_list>(), std::cin);
 
+        // initialize another document from stdin
         Document<std::vector> d(std::cin);
+        // show stats for the document, print to stdout
         d.showStats(std::cout);
         
 	return 0;
