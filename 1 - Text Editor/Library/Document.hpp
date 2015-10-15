@@ -16,9 +16,8 @@
 ** Intermediate C++ Homework Assignment #2 Possible Solution
 **
 ** Thomas Bettens
-** Last modified:  29-March-2015
-** Last modified:  29-April 2014
-** Last Verified:  29-April 2014
+** Last modified:  04-April-2015
+** Last Verified:  04-April-2015
 ** Verified with:  VC++2015 CTP 6, GCC 4.9.2,  Clang 3.5
 ***************************************************/
 
@@ -30,42 +29,15 @@
 #include <iostream>
 #include <stack>
 #include <string>
-#include <vector>
-#include <map>
-#include <set>
-#include <functional>
-#include <unordered_map>
 
 namespace Library
 {
-  /****************************************************************
-  ** One of the goals of this assignment is to easily change the underlying container type. Homework 1 demonstrated how a type alias
-  ** can be used to localize the changes necessary when changing the underlying container. We haven't formally treated template
-  ** classes in detail yet, I did introduce them in the Fundamentals course. I want to re-introduce the topic again here. Templates
-  ** are easy to read, but can be intimidating to write. You are welcome to implement this assignment using the pre-processor
-  ** technique presented in homework 1. But by providing you this class template header file, my hope is that you'll embrace this
-  ** class template technique in your solution. In the long run, a template solution is a better way to go and you'll see more of
-  ** them as the course moves forward. Instead of a constant type definition, think of the template parameters as a variable type
-  ** definition to be resolved at compile time. Functionally, All we're doing here is allowing the client of this class to choose
-  ** the underlying container. All we have to do is to design the class to be container neutral.
-  *****************************************************************/
-
-  // Allows using Document like this:
-  //        Document<std::vector>, or Document<std::list>
-  //   but sadly, not this:
-  //        Document<std::array> 
-  template < template<class, class> class T1 = std::vector, class T2 = std::string >
-
   class Document
   {
-    template <template<class, class> class T, class U>
-    friend std::ostream & operator<< (std::ostream & s, const Document<T, U> & document);
+    friend std::ostream & operator<< (std::ostream & s, const Document & document);
 
 
     public:
-      using ValueType     = T2;
-      using ContainerType = T1< ValueType, std::allocator<ValueType> >;
-
       // Constructors and destructor
       Document();
       Document( std::istream & in );
@@ -91,29 +63,27 @@ namespace Library
 
 
       // Copy a section of the document so it can be inserted later
-      void copy_range   (const ValueType & startingPhrase, const ValueType & endingPhrase); 
-      void paste_after  (const ValueType & pasteAfterPhrase);                              
+      void copy_range   (const std::string & startingPhrase, const std::string & endingPhrase); 
+      void paste_after  (const std::string & pasteAfterPhrase);                              
 
 
       // Remove all occurrences of a phrase. The assignment wants a delete function, but "delete" is a C++ reserved key word.  So,
       // following the STL's precedence, I used erase instead.
-      void erase        (const ValueType & phrase);
+      void erase        (const std::string & phrase);
 
 
       // Replace all occurrences of a phrase with another phrase
-      void substitute   (const ValueType & oldPhrase, const ValueType & newPhrase);
+      void substitute   (const std::string & oldPhrase, const std::string & newPhrase);
 
-      // show statistics for this document, print to supplied ostream
-      void showStats    (std::ostream & os);
+
+      // Displays word statistics in table format
+      void showStats( std::ostream & stream = std::cout );
+
 
     private:
-      // specified container type for the statistics
-      //using StatContainerType = std::map<ValueType, typename ContainerType::size_type>;  
-      using StatContainerType = std::unordered_map<ValueType, typename ContainerType::size_type>;
-      
-      ContainerType               _document;
-      std::stack<ContainerType>   _snapshots;      // Undo buffer allowing multiple levels of undo
-      ContainerType               _copy_buffer;    // Copy buffer holding a copy of some portion of the document
+      std::string               _document;
+      std::stack<std::string>   _snapshots;      // Undo buffer allowing multiple levels of undo
+      std::string               _copy_buffer;    // Copy buffer holding a copy of some portion of the document
 
   };  // class Document
 }  // namespace Library

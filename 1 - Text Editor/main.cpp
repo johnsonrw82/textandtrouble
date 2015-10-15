@@ -58,17 +58,16 @@ namespace {
 
 // main routine
 int main() {
-	// test the document functions using each of the STL containers specified
-	//testDocument(Document<std::vector>(), std::cin);
-	//testDocument(Document<std::list>(), std::cin);
-	//testDocument(Document<std::deque>(), std::cin);
-	//testDocument(Document<std::forward_list>(), std::cin);
-
-        // initialize another document from stdin
-        Document<std::vector> d(std::cin);
-        // show stats for the document, print to stdout
-        d.showStats(std::cout);
+        // Make two documents
+        Document d1(std::cin);
+        Document d2 = d1;
         
+	// test the document functions using each of the STL containers specified
+	testDocument(d1, std::cin);
+        
+        // show stats using second document (unmodified)
+        d2.showStats();
+               
 	return 0;
 }
 
