@@ -1,3 +1,10 @@
+/**
+* File:		Document.cpp
+* Author:	Ryan Johnson
+* Email:	johnsonrw82@cs.fullerton.edu
+* Purpose:	This file is the implementation of the non-inline document functions.
+*/
+
 #include "Library/Document.hpp"
 
 #include <unordered_map>
@@ -138,7 +145,7 @@ namespace Library {
             
                 // statistics container
                 StatContainerType statistics;
-                typename std::string::size_type maxOcc = 0;
+                std::string::size_type maxOcc = 0;
                 
                 // define regular expression to match a string starting with an _ or letter, 
                 // followed by zero or more alphanumeric characters
@@ -155,6 +162,7 @@ namespace Library {
                         std::transform(word.cbegin(), word.cend(), word.begin(), 
                                 [](char c) { return std::tolower(c, std::locale() ); });
                         
+                        // count occurrences
                         if ( ++statistics[word] > maxOcc ) { maxOcc = statistics[word]; }
                 }
                 
@@ -188,7 +196,7 @@ namespace Library {
                 const unsigned int histSize = 90;
                 
                 // compute the scaled size based on max occurrences (ensure at least 1)
-                typename std::string::size_type scaleValue = maxOcc / histSize + 1;
+                std::string::size_type scaleValue = maxOcc / histSize + 1;
                 
                 // display the chart header
                 // use setw to set the width, right/left to set alignment

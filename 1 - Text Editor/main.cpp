@@ -3,8 +3,7 @@
 * Author:	Ryan Johnson
 * Email:	johnsonrw82@cs.fullerton.edu
 * Purpose:	Main file containing main routine and simulated edit session code, which tests and compares
-*		the times of a large text editing operation using different STL containers and prints them
-*		to stdout.
+*		the times of a large text editing operation using std::string as the underlying document container.
 */
 
 #include "Library/Document.hpp"
@@ -21,15 +20,8 @@ using Library::Document;
 namespace {
 	// template function that simulates a document edit session
 	template<class T>
-	void testDocument(T && doc, std::istream & is) {
-		std::cout << "Testing Document with " << typeid(T).name() << "\n------------------------------------------------\n";		
-
-		// reset the stream so it can be used again
-		is.clear();
-		is.seekg(0);
-
-		// load the document from the stream
-		doc.load(is);
+	void testDocument(T && doc) {
+		std::cout << "Testing Document with " << typeid(T).name() << "\n------------------------------------------------\n";
 
 		// snapshot of the document
 		Library::Timer("Elapsed Time of ::snap() \t= "), doc.snap();;
@@ -52,6 +44,9 @@ namespace {
 		// erase a not-found phrase
 		Library::Timer("Elapsed Time of ::erase() \t= "), doc.erase("there's no way this phrase is in there");
 
+                // show stats
+                Library::Timer("Elapsed Time of ::showStats() \t= "), doc.showStats(std::clog);
+                
 		std::cout << '\n';
 	}
 }
@@ -63,7 +58,7 @@ int main() {
         Document d2 = d1;
         
 	// test the document functions using each of the STL containers specified
-	testDocument(d1, std::cin);
+	testDocument(d1);
         
         // show stats using second document (unmodified)
         d2.showStats();

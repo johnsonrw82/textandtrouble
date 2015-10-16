@@ -9,6 +9,7 @@
 *			-search/replace
 *			-erase
 *			-copy/paste
+*                       -show statistics 
 */
 
 #ifndef DOCUMENT_HXX
